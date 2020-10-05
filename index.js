@@ -21,24 +21,29 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 client.connect(err => {
   const worksCollection = client.db("volunteer").collection("networks");
   const bookingsCollection = client.db("volunteer").collection("orders");
-  app.get('/works',(req,res)=>{
-    // console.log(req.query.email);
+
+//   get data from server
+
+app.get('/works',(req,res)=>{ 
     worksCollection.find({}).limit(20)
     .toArray((err,documents)=>{
-        res.send(documents)
+    res.send(documents)
     })
 })
+
+// post data to server
 
 app.post('/addWorks',(req,res)=>{
     const works = req.body;
     console.log(works)
-worksCollection.insertOne(works)
-.then(result=>{
+    worksCollection.insertOne(works)
+    .then(result=>{
     console.log(result)
     res.send(result.insertedCount>0)
 })
 })
 
+// delete data from server
 
 app.delete('/delete/:id',(req,res)=>{
     const workerId = ObjectID(req.params.id)
@@ -49,7 +54,7 @@ app.delete('/delete/:id',(req,res)=>{
     })
 })
 
-   
+//    add single info from user
 
 app.post('/addBook',(req,res)=>{
     const work = req.body;
@@ -59,13 +64,19 @@ app.post('/addBook',(req,res)=>{
     })
     console.log(work)
 })
+
+
+// get user info through verification 
+
 app.get('/bookings',(req,res)=>{
-    // console.log(req.query.email);
     bookingsCollection.find({email: req.query.email})
     .toArray((err,documents)=>{
         res.send(documents)
     })
 })
+
+// see all the user task 
+
 app.get('/booking',(req,res)=>{
     bookingsCollection.find({})
     .toArray((err,docs)=>{
